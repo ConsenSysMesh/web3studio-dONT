@@ -8,7 +8,7 @@ The dONT (decentralized Off-chain Non-transferable) system
 Library for encrypting and storing a video; generating decryption keys that contain identity-based watermarks; decrypting a video with a decryption protocol that embeds a watermark into the video; decodes video to find identity of person for whom it was intended
 </h4>
 
-**Still WIP**
+
 
 To use:
 In main directory do:
