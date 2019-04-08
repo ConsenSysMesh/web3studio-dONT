@@ -1,4 +1,9 @@
 language: haskell
+cache:
+  directories:
+  - $HOME/.ghc
+  - $HOME/.cabal
+  - $HOME/.stack
 ghc:
     - "8.4.4"
 install: 
