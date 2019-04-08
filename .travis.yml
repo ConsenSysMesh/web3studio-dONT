@@ -1,0 +1,4 @@
+language: haskell
+install: 
+    - npm install
+    - cabal install --only-dependencies --enable-tests
