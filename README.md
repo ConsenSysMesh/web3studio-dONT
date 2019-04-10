@@ -4,22 +4,24 @@ The dONT (decentralized Off-chain Non-transferable) system
   <br/>
 </h1>
 
-<h4 align="center">
-Library for encrypting and storing a video; generating decryption keys that contain identity-based watermarks; decrypting a video with a decryption protocol that embeds a watermark into the video; decodes video to find identity of person for whom it was intended
-</h4>
+
+This is a WIP library for generating and distributing personalized decryption keys to verified token holders.
+The personalized decryption keys will decrypt a video, but while it does this it will embed a personalized watermark into the video. 
+
 
 
 
 To use:
-In main directory do:
-`npm install`
+In main directory type: 
+
+`npm install`  
 `stack build`
 
 To test, do
 `serverless offline start`
 
-http://localhost:3000/getintarray will show an int array (in next commit, it will be retrieving a value from DynamoDB. )
-http://localhost:3000/getrejected will show {"message":"unauthorized"} because requests go through a not-yet-working authorization function
+http://localhost:3000/getintarray will show a value retrieved from DynamoDB
+http://localhost:3000/getrejected will redirect to same lambda function as above
 
 
 
