@@ -4,7 +4,7 @@ The decentralized Off-chain Non-transferable (dONT) system
   <br/>
 </h1>
 
-Very much a **WIP** and activiely seeking contributors (preferably with experience in haskell and/or implementing encryption protocols)
+Very much a **WIP** and actively seeking contributors (preferably with experience in haskell and/or implementing encryption protocols)
 
 dONT will be composed of the following components:
 1. An AWS Lambda [Authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html) that uses ECDSA over the Koblitz curve secp256k1 to verify the source and integrity of the message (same method used by Ethereum to validate transactions). This authorizer will also check the public key against a smart contract so that only smart contract authorized addresses (e.g. token holders) have access to a given lambda function. This Authorizer will be completely portable. 
