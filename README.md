@@ -1,26 +1,32 @@
 
 <h1 align="center">
-The dONT (decentralized Off-chain Non-transferable) system
+The decentralized Off-chain Non-transferable (dONT) system
   <br/>
 </h1>
 
-<h4 align="center">
-Library for encrypting and storing a video; generating decryption keys that contain identity-based watermarks; decrypting a video with a decryption protocol that embeds a watermark into the video; decodes video to find identity of person for whom it was intended
-</h4>
+Very much a **WIP**
+
+dONT will be composed of the following components:
+1. An AWS Lambda [Authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html) uses ECDSA over the Koblitz curve secp256k1 to verify the source and integrity of the message (same method used by Ethereum to validate transactions). This authorizer will also check the public key against a smart contract so that only smart contract authorized addresses (e.g. token holders) have access to a given lambda function. This Authorizer will be completely portable. 
+
+2. A client-side watermarking scheme based off this [paper](https://www.researchgate.net/publication/265388939_TTP-Free_Asymmetric_Fingerprinting_Based_on_Client_Side_Embedding), in which a client generates an identifyer, encrypts it with a homomorphic encryption scheme, and sends it to a server who uses it to generate a personalized decryption key. When the client uses this decryption key to decrypt a copy righted piece of work (encrypted with AES is output feedback mode), the video is watermarked during the process of decryption. 
+
+3. An escrow-like system that ties off-chain service provision with on-chain clients.
 
 
 
 To use:
-In main directory do:
-`npm install`
+from top-most directory: 
+
+`npm install`  
 `stack build`
 
-To test, do
+To run tests:
+`stack test`
+
+To run lambda functions locally:
 `serverless offline start`
 
-http://localhost:3000/getintarray will show an int array (in next commit, it will be retrieving a value from DynamoDB. )
-http://localhost:3000/getrejected will show {"message":"unauthorized"} because requests go through a not-yet-working authorization function
 
-
-
+To run locally, you will need an installation of [cryptol](https://github.com/GaloisInc/cryptol), with the binary added to your path. You will also need an installation of [z3](https://github.com/Z3Prover/z3)
 
