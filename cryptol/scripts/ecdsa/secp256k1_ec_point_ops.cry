@@ -1,0 +1,73 @@
+//point additioon
+
+ec_add : {fv, gv} (PointOps fv [gv], JacobianPoint fv, AffinePoint fv) -> JacobianPoint fv
+ec_add(p,s,t) =
+    { x = r20, y = r23, z = r26 }
+  where
+   add = p.field.add
+   sub = p.field.sub
+   mul = p.field.mul
+   sq  = p.field.sq
+   is_zero(x) = p.field.is_equal(x, p.field.field_zero)
+   dbl(x) = add(x, x)
+   dbl_dec(x, y) = sub(sub(x, y), y)
+   /* Line numbers from Routine 2.2.7 definition. */
+
+   r1  = mul(s.x,t.x)       /*  1: t0 <- X1*X2*/
+   r2  = mul(s.y, t.y)      /*  2: t1 <- Y1*Y2*/
+   r3  = mul(t.x, t.y)      /*  3: t3 <- X2*Y2*/
+   r4  = add(s.x,s.y)       /*  4: t4 <- X1 + Y1*/
+   r5  = mul(r3,r4)         /*  5: t3 <- t3*t4*/
+   r6  = add(r1,r2)         /*  6: t4 <- t0 + t1*/
+   r7 = sub(r5,r6)          /*  7: t3 <- t3 - t4*/
+   r8 = mul(t.y,s.z)        /*  8: t4 <- Y2*Z1*/
+   r9 = add(r8,s.y)         /*  9: t4 <- t4 + Y1*/
+   r10 = mul(t.x,s.z)       /* 10: Y3 <- X2*Z1*/
+   r11 = add(r10,s.x)       /* 11: Y3 <- Y3 + X1*/
+   r12 = add(r1,r1)         /* 12: X3 <- t0 + t0*/
+   r13 = add(r12,r1)        /* 13: t0 <- X3 + t0*/
+   r14 = mul(21,s.z)        /* 14: t2 <- b3*Z1*/
+   r15 = add(r2,r14)        /* 15: Z3 <- t1 + t2*/
+   r16 = sub(r2,r14)        /* 16: t1 <- t1 - t2*/
+   r17 = mul(21,r11)        /* 17: Y3 <- b3 * Y3*/
+   r18 = mul(r9,r17)        /* 18: X3 <- t4 * Y3*/
+   r19 = mul(r7,r16)        /* 19: t2 <- t3 * t1*/
+   r20 = sub(r14,r18)       /* 20: X3 <- t2 - X3*/
+   r21 = mul(r17,r13)       /* 21: Y3 <- Y3 * t0*/
+   r22 = mul(r16,r15)       /* 22: t1 <- t1 * Z3*/
+   r23 = add(r22,r21)       /* 23: Y3 <- t1 + Y3*/
+   r24 = mul(r13,r7)        /* 24: t0 <- t0*t3*/
+   r25 = mul(r15,r9)        /* 25: Z3 <- Z3*t4  */
+   r26 = add(r25,r24)       /* 26: Z3 <- Z3+t0 */
+
+//point doubling from https://eprint.iacr.org/2015/1060.pdf
+ec_double : {fv} (Field fv, JacobianPoint fv) -> JacobianPoint fv
+ec_double(f,s) =
+  if is_zero(s.z) then
+    { x = f.field_unit, y = f.field_unit, z = f.field_zero } /* 5: r <- (1,1,0) and return */
+  else
+    { x = r18, y = r15, z = r10 }
+ where
+   add = f.add
+   sub = f.sub
+   mul = f.mul
+   is_zero(x) = f.is_equal(x, f.field_zero)
+
+   r1  = f.sq(s.y)               /*  1: t0 <- Y * Y */
+   r2  = add(r1,r1)              /*  2: Z3 <- t0 + t0*/
+   r3  = add(r2, r2)            /*   3: Z3 <- Z3 + Z3 */
+   r4 =  add(r3, r3)            /*   4: Z3 <- Z3 + Z3 */
+   r5 =  mul(s.y,s.z)           /*   5: t1 <- Y * Z */
+   r6 =  mul(s.z, s.z)           /*  6: t2 <- Z *  */
+   r7 =  mul(r6,21)              /*  7: t2 <- b3 * t2 */
+   r8 =  mul(r7,r4)              /*  8: X3 <- t2 * Z3 */
+   r9 =  add(r1, r7)             /*  9: Y3 <- t0 + t2 */
+   r10 = mul(r5,r4)               /* 10: Z3 <- t1 * Z3 */
+   r11 = add(r7,r7)               /* 11: t1 <- t2 + t2 */
+   r12 = add(r11,r7)             /*  12: t2 <- t1 + t2 */ 
+   r13 = sub(r1,r12)             /*  13: t0 <- t0 - t2 */
+   r14 = mul(r13,r9)             /*  14: Y3 <- t0 * Y3 */
+   r15 = add(r8,r14)            /*   15: Y3 <- X3 + Y3 */
+   r16 = mul(s.x, s.y)           /*  16: t1 <- X * Y */
+   r17 = mul(r1, r16)           /*   17: X3 <- t0 * t1 */
+   r18 = add(r17,r17)           /*   18: X3 <- X3 + X3 */
